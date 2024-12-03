@@ -8,11 +8,25 @@ let db = new Map();
 
 app.post('/login', function(req, res) {
     const {id, pwd} = req.body;
-
-    res.json({
-        message: `Welcome User ${name}`
-    });
-})
+    let user = db.get(id);
+    if (user){
+        if (user.pwd == pwd) {
+            res.status(200).json({
+                message: `Welcome User ${user.name}`
+            });
+        }
+        else {
+            res.status(401).json({
+                message: `Cannot login with submitted id / pwd`
+            })
+        }
+    }
+    else {
+        res.status(401).json({
+            message: `Cannot login with submitted id / pwd`
+        });
+    }
+});
 
 app.post('/join', function(req, res) {
     const {id, pwd, name} = req.body;
@@ -28,7 +42,7 @@ app.post('/join', function(req, res) {
             message: `Unable to process your request`
         });
     }
-})
+});
 
 app.get('/users/:id', function(req, res) {
     let {id} = req.params;
@@ -44,7 +58,7 @@ app.get('/users/:id', function(req, res) {
         })
     }
 
-})
+});
 
 app.delete('/users/:id', function(req, res) {
     let {id} = req.params;
@@ -59,4 +73,4 @@ app.delete('/users/:id', function(req, res) {
             message: `Unable to find user with id ${id}`
         })
     }
-})
+});
